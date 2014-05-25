@@ -1,3 +1,5 @@
+# INTERACTION GRAPH (number of posts as weight)
+
 require(igraph)
 
 # Caricamento del file prefiltrato con pesi
