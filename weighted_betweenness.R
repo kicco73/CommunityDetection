@@ -1,4 +1,4 @@
-# INTERACTION GRAPH (number of posts as weight)
+# WEIGHTED EGO NETWORK (number of posts as weight)
 
 require(igraph)
 
