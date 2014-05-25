@@ -1,24 +1,18 @@
-#require(graph)
-# First we load the ipgrah package
-library(igraph)
+require(igraph)
 
-t = c("character", "character", "numeric")
-fb.data = read.table("prefiltered.csv", header=T, colClasses=t)
-fb.data$weight = NULL
-fb.matrix = as.matrix(fb.data)
-g = graph.edgelist(fb.matrix, directed=F)
+# Caricamento del file prefiltrato contenente l'ego network
 
-ebc <- edge.betweenness.community(g, directed=F)
- 
-mods <- sapply(0:ecount(g), function(i){
-  g2 <- delete.edges(g, ebc$removed.edges[seq(length=i)])
-  cl <- clusters(g2)$membership
-  modularity(g,cl)
-})
- 
-g <- delete.edges(g, ebc$removed.edges[seq(length=which.max(mods)-1)])
-V(g)$color=clusters(g)$membership
-g$layout <- layout.fruchterman.reingold
-plot(g, vertex.label=NA)
-clusters(g)$membership
+classes = c("character", "character", "numeric")
+ego_network = read.table("prefiltered.csv", header=T, colClasses=classes)
+ego_network$weight = NULL
+ego_network.graph = graph.edgelist(as.matrix(ego_network), directed=F)
+
+# Calcolo delle community (usando il massimo della modularity)
+
+ego_network.community = edge.betweenness.community(ego_network.graph, directed=F, modularity=T)
+print(ego_network.community)
+
+#V(ego_network.graph)$color = ego_network.community$membership
+#ego_network.graph$layout = layout.fruchterman.reingold
+#plot(ego_network.graph, vertex.label=NA)
  
