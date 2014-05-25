@@ -1,15 +1,17 @@
-#require(graph)
-# First we load the ipgrah package
-library(igraph)
+require(igraph)
 
-t = c("character", "character", "numeric")
-fb.data = read.table("prefiltered.csv", header=T, colClasses=t)
-fb.data$weight = NULL
-fb.matrix = as.matrix(fb.data)
-g = graph.edgelist(fb.matrix, directed=F)
-fc <- fastgreedy.community(g)
-com<-community.to.membership(g, fc$merges, steps= which.max(fc$modularity)-1)
-V(g)$color <- com$membership+1
-g$layout <- layout.fruchterman.reingold
-plot(g, vertex.label=NA)
-com
+# Caricamento del file prefiltrato contenente l'ego network
+
+classes = c("character", "character", "numeric")
+ego_network = read.table("prefiltered.csv", header=T, colClasses=classes)
+ego_network$weight = NULL
+ego_network.graph = graph.edgelist(as.matrix(ego_network), directed=F)
+
+# Calcolo delle community usando fastgreedy + max modularity
+
+ego_network.community = fastgreedy.community(ego_network.graph, modularity=T)
+print(ego_network.community)
+
+V(ego_network.graph)$color = ego_network.community$membership
+ego_network.graph$layout <- layout.fruchterman.reingold
+plot(ego_network.graph, vertex.label=NA)
