@@ -1,23 +1,19 @@
-#require(graph)
-# First we load the ipgrah package
-library(igraph)
+require(igraph)
 
-t = c("character", "character", "numeric")
-fb.data = read.table("prefiltered.csv", header=T, colClasses=t)
-g = graph.data.frame(fb.data, directed=F, vertices=NULL)
+# Caricamento del file prefiltrato con pesi
 
-ebc <- edge.betweenness.community(g, directed=F)
- 
-mods <- sapply(0:ecount(g), function(i){
-  g2 <- delete.edges(g, ebc$removed.edges[seq(length=i)])
-  cl <- clusters(g2)$membership
-  modularity(g,cl)
-})
- 
-g <- delete.edges(g, ebc$removed.edges[seq(length=which.max(mods)-1)])
-V(g)$color=clusters(g)$membership
- 
-g$layout <- layout.fruchterman.reingold
-plot(g, vertex.label=NA)
-clusters(g)$membership
+classes = c("character", "character", "numeric")
+weighted_ego_network = read.table("prefiltered.csv", header=T, colClasses=classes)
+weighted_ego_network.graph = graph.data.frame(weighted_ego_network, directed=F, vertices=NULL)
+
+# Calcolo delle community usando la massimizzazione della modularity
+
+weighted_ego_network.community = edge.betweenness.community(weighted_ego_network.graph, directed=F, modularity=T)
+print(weighted_ego_network.community)
+
+# Disegna il grafico
+
+#V(weighted_ego_network.graph)$color = weighted_ego_network.community$membership 
+#weighted_ego_network.graph$layout = layout.fruchterman.reingold
+#plot(weighted_ego_network.graph, vertex.label=NA)
  
