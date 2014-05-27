@@ -12,6 +12,8 @@ import sys
 line_no = 0
 user = {}
 exclude_uid = 10202887345656400L
+min_duration = None
+max_num_posts = 0
 
 while True:
 	line = sys.stdin.readline()
@@ -36,7 +38,21 @@ while True:
 	if not user[uid1].has_key(uid2):
 		user[uid1][uid2] = (0, 0)
 	
-	user[uid1][uid2] = (user[uid1][uid2][0]+num_posts, max(user[uid1][uid2][1], duration))
+	p = user[uid1][uid2][0]+num_posts
+	d = max(user[uid1][uid2][1], duration)
+	user[uid1][uid2] = (p, d)
+	max_num_posts = max(max_num_posts, p)
+
+for uid1 in user.keys():
+	for uid2 in user[uid1].keys():
+		num_posts, duration = user[uid1][uid2]
+		if duration >= 60*60*24*30:
+			if min_duration is None:
+				min_duration = duration
+			else:
+				min_duration = min(min_duration, duration)
+
+scale_factor = 99.0 * min_duration / max_num_posts
 
 print "uid1\tuid2\tweight"
 for uid1 in user.keys():
@@ -44,6 +60,6 @@ for uid1 in user.keys():
 		num_posts, duration = user[uid1][uid2]
 		weight = 1
 		if duration >= 60*60*24*30:
-			weight = 1 + num_posts * 1.0 / duration
+			weight = 1 + num_posts * scale_factor / duration
 		print "%s\t%s\t%s"  % (uid1, uid2, weight)
 
