@@ -58,7 +58,7 @@ print "uid1\tuid2\tweight"
 for uid1 in user.keys():
 	for uid2 in user[uid1].keys():
 		num_posts, duration = user[uid1][uid2]
-		weight = 1
+		weight = 0.00000001
 		if duration >= 60*60*24*30:
 			weight = 1 + num_posts * scale_factor / duration
 		print "%s\t%s\t%s"  % (uid1, uid2, weight)
