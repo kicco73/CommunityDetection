@@ -4,7 +4,7 @@
 # 1) elimina i post in/out verso l'utente proprietario dell'ego-network
 # 2) somma i post ricevuti/inviati da un utente all'altro in un unico campo
 # 3) calcola il massimo tempo intercorso dal primo post di un utente verso l'altro
-# 4) produce un peso 1 per gli utenti che non hanno post (o che hanno scambiato il primo post fino a 30gg indietro)
+# 4) produce un peso normalizzato per gli utenti che non hanno post (o che hanno scambiato il primo post fino a 30gg indietro)
 # 5) altrimenti produce un peso normalizzato (1 + totposts / maxduration)
 
 import sys
